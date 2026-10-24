@@ -1,0 +1,13 @@
+{
+  "bd168468-0844-4b45-81be-9948bd41daed": {
+    "risk_id": "bd168468-0844-4b45-81be-9948bd41daed",
+    "transaction_id": "349f65c6-3acc-44be-a7c3-b59a971134ba",
+    "score": 64,
+    "level": "MEDIUM",
+    "flags": "[\"round_amount\", \"new_account\"]",
+    "reasons": "[\"Round-number amount is a common fraud pattern.\", \"Account is less than 30 days old.\"]",
+    "created_at": {
+      "__dt__": "2026-10-24T13:51:22.314162"
+    }
+  }
+}

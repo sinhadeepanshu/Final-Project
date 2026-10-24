@@ -1,0 +1,23 @@
+{
+  "349f65c6-3acc-44be-a7c3-b59a971134ba": {
+    "transaction_id": "349f65c6-3acc-44be-a7c3-b59a971134ba",
+    "sender_acc_id": "881d18f6-8a04-46b7-bf63-892d804431e5",
+    "receiver_name": "Soubhagya",
+    "receiver_acc": "40549805908459045",
+    "receiver_ifsc": "IRFD000F578",
+    "receiver_bank": "SBI",
+    "amount": 500000.0,
+    "purpose": "education",
+    "channel": "RTGS",
+    "remarks": "",
+    "status": "PENDING_BANK_APPROVAL",
+    "reject_reason": null,
+    "bank_reference": null,
+    "created_at": {
+      "__dt__": "2026-10-24T13:51:13.402398"
+    },
+    "updated_at": {
+      "__dt__": "2026-10-24T13:52:30.462542"
+    }
+  }
+}

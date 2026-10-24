@@ -18,5 +18,65 @@
       "__dt__": "2026-10-24T08:42:58.685022"
     },
     "details": "User logged in"
+  },
+  "e5e1e502-699e-4fc8-b9fa-50370271a551": {
+    "log_id": "e5e1e502-699e-4fc8-b9fa-50370271a551",
+    "transaction_id": null,
+    "event_type": "USER_LOGIN",
+    "actor": "+919876543210",
+    "timestamp": {
+      "__dt__": "2026-10-24T13:50:22.152110"
+    },
+    "details": "User logged in"
+  },
+  "3a3ede51-d528-440e-afc6-ab0936677389": {
+    "log_id": "3a3ede51-d528-440e-afc6-ab0936677389",
+    "transaction_id": null,
+    "event_type": "BENEFICIARY_ADDED",
+    "actor": "+919876543210",
+    "timestamp": {
+      "__dt__": "2026-10-24T13:50:48.130821"
+    },
+    "details": "Added beneficiary Soubhagya"
+  },
+  "bd5a6f6d-1bbf-4885-b9ea-47dea5efd7ca": {
+    "log_id": "bd5a6f6d-1bbf-4885-b9ea-47dea5efd7ca",
+    "transaction_id": "349f65c6-3acc-44be-a7c3-b59a971134ba",
+    "event_type": "TRANSACTION_SUBMITTED",
+    "actor": "+919876543210",
+    "timestamp": {
+      "__dt__": "2026-10-24T13:51:22.320926"
+    },
+    "details": "Rs 500,000 to Soubhagya – risk MEDIUM"
+  },
+  "907b4242-6c54-4c54-a5f9-84a1f36ad7d5": {
+    "log_id": "907b4242-6c54-4c54-a5f9-84a1f36ad7d5",
+    "transaction_id": null,
+    "event_type": "ADMIN_LOGIN",
+    "actor": "+919999999999",
+    "timestamp": {
+      "__dt__": "2026-10-24T13:52:16.752217"
+    },
+    "details": "Admin logged in"
+  },
+  "76d4dc76-8b4b-435f-879a-cb8445a2055a": {
+    "log_id": "76d4dc76-8b4b-435f-879a-cb8445a2055a",
+    "transaction_id": "349f65c6-3acc-44be-a7c3-b59a971134ba",
+    "event_type": "ADMIN_FORWARDED_TO_BANK",
+    "actor": "+919999999999",
+    "timestamp": {
+      "__dt__": "2026-10-24T13:52:30.471224"
+    },
+    "details": "Admin forwarded Rs 500,000 to bank for approval"
+  },
+  "b37fc25c-612a-4533-90d4-f40c95ec700e": {
+    "log_id": "b37fc25c-612a-4533-90d4-f40c95ec700e",
+    "transaction_id": null,
+    "event_type": "BANK_OFFICER_LOGIN",
+    "actor": "+919888888888",
+    "timestamp": {
+      "__dt__": "2026-10-24T13:52:52.521315"
+    },
+    "details": "Bank officer PayVanta Bank Officer logged in"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "744618c5-6a15-4aab-b9ce-3f8af0220bed": {
+    "id": "744618c5-6a15-4aab-b9ce-3f8af0220bed",
+    "user_id": "56ee0010-542f-4e2a-be0b-1845bfc1a6c9",
+    "name": "Soubhagya",
+    "account_number": "40549805908459045",
+    "ifsc": "IRFD000F578",
+    "bank_name": "SBI",
+    "status": "ACTIVE",
+    "created_at": {
+      "__dt__": "2026-10-24T13:50:48.126822"
+    }
+  }
+}

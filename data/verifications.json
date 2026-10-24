@@ -1,0 +1,22 @@
+{
+  "04b81d81-f05f-4584-8d2c-efc72fbe8bcd": {
+    "verification_id": "04b81d81-f05f-4584-8d2c-efc72fbe8bcd",
+    "transaction_id": "349f65c6-3acc-44be-a7c3-b59a971134ba",
+    "party": "SENDER",
+    "result": "PASS",
+    "details": "Sender verification passed.",
+    "created_at": {
+      "__dt__": "2026-10-24T13:51:22.181319"
+    }
+  },
+  "35b0bf7f-7d62-45b5-8100-ab8239e1648b": {
+    "verification_id": "35b0bf7f-7d62-45b5-8100-ab8239e1648b",
+    "transaction_id": "349f65c6-3acc-44be-a7c3-b59a971134ba",
+    "party": "RECEIVER",
+    "result": "PASS",
+    "details": "Receiver verification passed.",
+    "created_at": {
+      "__dt__": "2026-10-24T13:51:22.182326"
+    }
+  }
+}

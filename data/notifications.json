@@ -1,0 +1,20 @@
+{
+  "3b1b291f-4d0c-4ea2-bb15-97a1014cb641": {
+    "id": "3b1b291f-4d0c-4ea2-bb15-97a1014cb641",
+    "user_id": "56ee0010-542f-4e2a-be0b-1845bfc1a6c9",
+    "message": "⏳ Transfer of Rs 500,000 is under review. Risk: MEDIUM",
+    "is_read": false,
+    "created_at": {
+      "__dt__": "2026-10-24T13:51:22.318926"
+    }
+  },
+  "30d9d024-1fd8-4a21-9831-d80ae922defa": {
+    "id": "30d9d024-1fd8-4a21-9831-d80ae922defa",
+    "user_id": "56ee0010-542f-4e2a-be0b-1845bfc1a6c9",
+    "message": "🏦 Your transfer of Rs 500,000 has been forwarded to the bank.",
+    "is_read": false,
+    "created_at": {
+      "__dt__": "2026-10-24T13:52:30.476330"
+    }
+  }
+}

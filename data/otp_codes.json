@@ -36,5 +36,62 @@
     "created_at": {
       "__dt__": "2026-10-24T08:42:50.070082"
     }
+  },
+  "15de67a4-608c-43d1-9ef8-1dbe5048e742": {
+    "id": "15de67a4-608c-43d1-9ef8-1dbe5048e742",
+    "phone": "+919876543210",
+    "purpose": "LOGIN",
+    "transaction_id": null,
+    "otp_hash": "scrypt:32768:8:1$h2NjQgMrjxxni49G$d3c8747ed5fdf859fb50a9f80a6e85ecd86d0dbaa8a80803a4de5f2e8afe3e8dbbb82fa4d1e30e5e0591477df8c2ec92ea05879db7ac26cfca1a1b6a3b262dad",
+    "expires_at": {
+      "__dt__": "2026-10-24T13:55:12.841362"
+    },
+    "attempts": 0,
+    "used": true,
+    "resend_count": 0,
+    "last_sent_at": {
+      "__dt__": "2026-10-24T13:50:13.144184"
+    },
+    "created_at": {
+      "__dt__": "2026-10-24T13:50:13.144184"
+    }
+  },
+  "c22889b7-a0bd-402a-8c8e-21854c255926": {
+    "id": "c22889b7-a0bd-402a-8c8e-21854c255926",
+    "phone": "+919876543210",
+    "purpose": "PAYMENT",
+    "transaction_id": "349f65c6-3acc-44be-a7c3-b59a971134ba",
+    "otp_hash": "scrypt:32768:8:1$WvBXx3pt3735qVgr$54064b4c23b5f712e2f8ce582e8f0c2e800dd92b384b26314787d3ca04a4ab3c2bbf3940aaf6243d539560e4cd7b87aa58195250b49591058400cdd4db9e2870",
+    "expires_at": {
+      "__dt__": "2026-10-24T13:56:13.405398"
+    },
+    "attempts": 0,
+    "used": true,
+    "resend_count": 0,
+    "last_sent_at": {
+      "__dt__": "2026-10-24T13:51:13.703779"
+    },
+    "created_at": {
+      "__dt__": "2026-10-24T13:51:13.703779"
+    }
+  },
+  "dd879f25-df29-4ef3-9d77-1a40a6572308": {
+    "id": "dd879f25-df29-4ef3-9d77-1a40a6572308",
+    "phone": "+919999999999",
+    "purpose": "LOGIN",
+    "transaction_id": null,
+    "otp_hash": "scrypt:32768:8:1$AUQqgYc5yfjSsgYx$c126872937348108cd134128f10929d544e6c8036474d38c2f2c916173dab4264ee6dea89d961026d3479c35e6b3f97a1782e67f893be0cfe0c4becd51cd4f2c",
+    "expires_at": {
+      "__dt__": "2026-10-24T13:57:11.216582"
+    },
+    "attempts": 0,
+    "used": true,
+    "resend_count": 0,
+    "last_sent_at": {
+      "__dt__": "2026-10-24T13:52:11.358533"
+    },
+    "created_at": {
+      "__dt__": "2026-10-24T13:52:11.358533"
+    }
   }
 }
