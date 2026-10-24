@@ -1,0 +1,16 @@
+<div class="form-group">
+  <label class="form-label">PAN Number</label>
+  <input type="text" name="pan" class="form-control" placeholder="ABCDE1234F"
+         value="{{ user.kyc_pan or '' }}" maxlength="10" required>
+  <div class="form-text">Format: 5 letters + 4 digits + 1 letter</div>
+</div>
+<div class="form-group">
+  <label class="form-label">Aadhaar Last 4 Digits</label>
+  <input type="text" name="aadhaar_last4" class="form-control" placeholder="1234"
+         value="{{ user.kyc_aadhaar_last4 or '' }}" maxlength="4" required>
+</div>
+<div class="form-group">
+  <label class="form-label">Current Address</label>
+  <textarea name="address" class="form-control" rows="3" placeholder="Full address" required>{{ user.kyc_address or '' }}</textarea>
+</div>
+<button type="submit" class="btn btn-primary">Submit KYC</button>

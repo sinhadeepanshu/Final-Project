@@ -1,0 +1,50 @@
+{
+  "881d18f6-8a04-46b7-bf63-892d804431e5": {
+    "account_id": "881d18f6-8a04-46b7-bf63-892d804431e5",
+    "user_id": "56ee0010-542f-4e2a-be0b-1845bfc1a6c9",
+    "bank_name": "PayVanta Bank",
+    "account_number": "87834693347624",
+    "ifsc": "PVNT0001001",
+    "balance": 1000000,
+    "status": "ACTIVE",
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:51.893362"
+    }
+  },
+  "3d4110ce-181d-4529-9872-e1a212f2fcef": {
+    "account_id": "3d4110ce-181d-4529-9872-e1a212f2fcef",
+    "user_id": "9fe5299a-0610-4fa8-a805-e79407d6e392",
+    "bank_name": "PayVanta Bank",
+    "account_number": "36148120313313",
+    "ifsc": "PVNT0001001",
+    "balance": 1000000,
+    "status": "ACTIVE",
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:52.093814"
+    }
+  },
+  "bfae4bae-8121-4224-b529-3bc5dcd5461f": {
+    "account_id": "bfae4bae-8121-4224-b529-3bc5dcd5461f",
+    "user_id": "fce83246-1829-4e87-825c-f2f9e9162c17",
+    "bank_name": "PayVanta Bank",
+    "account_number": "77722177513347",
+    "ifsc": "PVNT0001001",
+    "balance": 1000000,
+    "status": "ACTIVE",
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:52.291169"
+    }
+  },
+  "b2788f7e-c82e-4226-bcdf-84e262f7066a": {
+    "account_id": "b2788f7e-c82e-4226-bcdf-84e262f7066a",
+    "user_id": "85c3bf24-0e7e-4c4f-8390-0625de9fbf24",
+    "bank_name": "PayVanta Bank",
+    "account_number": "85750227445557",
+    "ifsc": "PVNT0001001",
+    "balance": 1000000,
+    "status": "ACTIVE",
+    "created_at": {
+      "__dt__": "2026-10-24T08:42:29.545598"
+    }
+  }
+}

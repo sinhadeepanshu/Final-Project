@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4f46e5">
+  <title>PayVanta AI — Payment Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .demo-notice{margin:0 0 16px;padding:11px 13px;border-radius:10px;background:#fff7ed;color:#9a3412;font-size:13px;line-height:1.5;border:1px solid #fed7aa}
+    .demo-pill{display:inline-block;background:#eef2ff;color:#4338ca;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:700;margin-top:8px}
+    .auth-card{max-width:470px}
+  </style>
+</head>
+<body>
+<div class="auth-wrap"><div class="auth-card">
+  <div class="auth-header"><h1>🏦 PayVanta AI</h1><p>Intelligent High-Value Payment Platform</p><span class="demo-pill">LIVE WEBSITE · FRONTEND PREVIEW</span></div>
+  <div class="auth-body">
+    <div class="demo-notice"><strong>Preview mode:</strong> Website design is live, but login, signup, OTP and transactions are not connected until the backend is deployed.</div>
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" onclick="switchTab('user')">👤 User Login</button>
+      <button type="button" class="auth-tab" onclick="switchTab('signup')">✨ Sign Up</button>
+    </div>
+    <section id="tab-user" class="tab-content">
+      <form onsubmit="previewNotice(event)">
+        <div class="form-group"><label class="form-label" for="identifier">Phone / Email</label><input id="identifier" type="text" class="form-control" placeholder="+91XXXXXXXXXX or email" required></div>
+        <div class="form-group"><label class="form-label" for="password">Password</label><input id="password" type="password" class="form-control" placeholder="••••••••" required></div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Login &amp; Get OTP →</button>
+      </form>
+    </section>
+    <section id="tab-signup" class="tab-content" style="display:none">
+      <form onsubmit="previewNotice(event)">
+        <div class="form-group"><label class="form-label" for="name">Full Name</label><input id="name" type="text" class="form-control" placeholder="Your full name" required></div>
+        <div class="form-group"><label class="form-label" for="phone">Phone Number</label><input id="phone" type="tel" class="form-control" placeholder="+91XXXXXXXXXX" required></div>
+        <div class="form-group"><label class="form-label" for="email">Email</label><input id="email" type="email" class="form-control" placeholder="you@example.com" required></div>
+        <div class="form-group"><label class="form-label" for="new-password">Password</label><input id="new-password" type="password" class="form-control" placeholder="Min 8 characters" minlength="8" required></div>
+        <div class="form-group"><label class="form-label" for="confirm-password">Confirm Password</label><input id="confirm-password" type="password" class="form-control" placeholder="Re-enter password" minlength="8" required></div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Create Account →</button>
+      </form>
+    </section>
+    <div id="notice" class="demo-notice" style="display:none;margin-top:14px" role="status"></div>
+    <div style="text-align:center;margin-top:14px"><a href="#" onclick="showInfo(event,'Password recovery will be available after the backend is connected.')" class="text-muted text-sm">🔒 Forgot Password?</a></div>
+    <div style="text-align:center;margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+      <a href="#" onclick="showInfo(event,'Admin Portal will be available after the backend is connected.')" class="text-muted text-sm">🔐 Admin Portal</a><span style="color:#e2e8f0">|</span>
+      <a href="#" onclick="showInfo(event,'Bank Officer Portal will be available after the backend is connected.')" class="text-muted text-sm">🏦 Bank Officer Portal</a>
+    </div>
+    <p class="text-muted text-sm mt-8" style="text-align:center">Designed for OTP verification &amp; AI fraud detection</p>
+  </div>
+</div></div>
+<script>
+function switchTab(tab){document.querySelectorAll('.tab-content').forEach(el=>el.style.display='none');document.querySelectorAll('.auth-tab').forEach(el=>el.classList.remove('active'));document.getElementById('tab-'+tab).style.display='block';document.querySelectorAll('.auth-tab')[tab==='user'?0:1].classList.add('active');document.getElementById('notice').style.display='none';}
+function previewNotice(e){e.preventDefault();const n=document.getElementById('notice');n.textContent='This is a frontend preview only. Your details were not sent or saved. Connect the backend before using login or signup.';n.style.display='block';}
+function showInfo(e,msg){e.preventDefault();const n=document.getElementById('notice');n.textContent=msg;n.style.display='block';}
+</script>
+</body></html>

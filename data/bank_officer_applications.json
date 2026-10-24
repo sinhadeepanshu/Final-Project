@@ -1,0 +1,18 @@
+{
+  "98b18ddf-1405-46a4-9704-7beeec04523b": {
+    "id": "98b18ddf-1405-46a4-9704-7beeec04523b",
+    "bank_name": "PayVanta Bank",
+    "applicant_name": "PayVanta Bank Officer",
+    "phone": "+919888888888",
+    "email": "officer@payvanta.in",
+    "password_hash": "scrypt:32768:8:1$dYJMkpVXkJiwtZfp$32966563ea88b44a7791fe9376efeaf684a3a8fb19552029060fc4aab5da22059d7d7ddd02da72dcaebaa16dcde4199f9890f36c9dbbff78a431ba5e86ff5243",
+    "status": "APPROVED",
+    "review_reason": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "officer_id": "a9f4d9b6-ce15-4054-8abf-46c9b519f853",
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:51.644545"
+    }
+  }
+}

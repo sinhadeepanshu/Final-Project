@@ -1,0 +1,165 @@
+{% extends "user/base_user.html" %}
+{% block title %}Transaction Detail – PayVanta AI{% endblock %}
+{% block page_title %}Transaction Detail{% endblock %}
+
+{% block content %}
+<div style="max-width:800px;">
+  <!-- Status Banner -->
+  {% if txn.status == 'REJECTED' %}
+  <div class="flash flash-danger">
+    ❌ <strong>Transaction Rejected</strong> – {{ txn.reject_reason }}
+  </div>
+  {% elif txn.status == 'EXECUTED' %}
+  <div class="flash flash-success">
+    ✅ <strong>Transfer Executed</strong> – Bank Reference: <strong>{{ txn.bank_reference }}</strong>
+  </div>
+  {% elif txn.status == 'FAILED' %}
+  <div class="flash flash-danger">
+    ❌ <strong>Bank Gateway Failed</strong> – {{ txn.reject_reason }}
+  </div>
+  {% elif txn.status == 'PENDING_ADMIN_APPROVAL' %}
+  <div class="flash flash-warning">
+    ⏳ <strong>Pending Admin Approval</strong> – Your transaction is under review.
+  </div>
+  {% endif %}
+
+  <div class="grid-2">
+    <!-- Transaction Info -->
+    <div class="card">
+      <div class="card-header"><h3>💸 Transfer Details</h3></div>
+      <div class="card-body">
+        <table style="width:100%">
+          <tr><td class="text-muted" style="padding:8px 0;width:45%">Amount</td>
+              <td class="fw-700" style="font-size:18px;">₹{{ txn.amount | inr }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">In Words</td>
+              <td class="text-sm">{{ txn.amount | amount_words }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Recipient</td>
+              <td><strong>{{ txn.receiver_name }}</strong></td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Account</td>
+              <td style="font-family:monospace">{{ txn.receiver_acc }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">IFSC</td>
+              <td>{{ txn.receiver_ifsc }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Bank</td>
+              <td>{{ txn.receiver_bank or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Channel</td>
+              <td>{{ txn.channel }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Purpose</td>
+              <td>{{ txn.purpose | title }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Remarks</td>
+              <td>{{ txn.remarks or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Status</td>
+              <td><span class="badge {{ txn.status | status_badge }}">{{ txn.status | replace('_',' ') }}</span></td></tr>
+          {% if txn.bank_reference %}
+          <tr><td class="text-muted" style="padding:8px 0">Bank Ref</td>
+              <td style="font-family:monospace">{{ txn.bank_reference }}</td></tr>
+          {% endif %}
+          <tr><td class="text-muted" style="padding:8px 0">Date</td>
+              <td>{{ txn.created_at.strftime('%d %b %Y, %H:%M') }}</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card">
+      <div class="card-header"><h3>📍 Transaction Timeline</h3></div>
+      <div class="card-body">
+        <div class="timeline">
+          {% set stages = [
+            ('PENDING_OTP', 'OTP Sent', 'Awaiting OTP confirmation'),
+            ('VERIFYING', 'Dual Verification', 'Sender & receiver checks'),
+            ('PENDING_ADMIN_APPROVAL', 'Admin Review', 'AI risk + admin approval'),
+            ('EXECUTED', 'Executed', 'Transfer completed'),
+          ] %}
+          {% set status_order = ['PENDING_OTP','VERIFYING','PENDING_ADMIN_APPROVAL','EXECUTED','REJECTED','FAILED'] %}
+          {% set current_idx = status_order.index(txn.status) if txn.status in status_order else 0 %}
+          {% for key, label, desc in stages %}
+            {% set stage_idx = status_order.index(key) %}
+            <div class="timeline-item">
+              <div class="timeline-dot
+                {% if txn.status == 'REJECTED' and stage_idx >= current_idx %}danger
+                {% elif stage_idx < current_idx %}success
+                {% elif stage_idx == current_idx %}active
+                {% endif %}
+              "></div>
+              <div style="padding-left:8px;">
+                <div class="fw-600" style="font-size:13px;">{{ label }}</div>
+                <div class="text-muted text-sm">{{ desc }}</div>
+              </div>
+            </div>
+          {% endfor %}
+          {% if txn.status == 'REJECTED' %}
+          <div class="timeline-item">
+            <div class="timeline-dot danger"></div>
+            <div style="padding-left:8px;">
+              <div class="fw-600 text-danger">Rejected</div>
+              <div class="text-muted text-sm">{{ txn.reject_reason }}</div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Results -->
+  {% if verifications %}
+  <div class="card mt-16">
+    <div class="card-header"><h3>🔍 Verification Results</h3></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Party</th><th>Result</th><th>Details</th></tr></thead>
+        <tbody>
+          {% for v in verifications %}
+          <tr>
+            <td>{{ v.party }}</td>
+            <td><span class="badge badge-{{ 'success' if v.result=='PASS' else 'danger' }}">{{ v.result }}</span></td>
+            <td>{{ v.details }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- AI Risk Assessment -->
+  {% if risk %}
+  <div class="card mt-16">
+    <div class="card-header">
+      <h3>🤖 AI Risk Assessment</h3>
+      <span class="badge badge-{{ risk.level | lower }}">{{ risk.level }} RISK</span>
+    </div>
+    <div class="card-body">
+      <div class="flex-between mb-8">
+        <span class="text-muted">Risk Score</span>
+        <span class="fw-700">{{ risk.score | int }}/100</span>
+      </div>
+      <div class="risk-bar risk-{{ risk.level | lower }} mb-16">
+        <div class="risk-bar-fill" style="width:{{ risk.score }}%"></div>
+      </div>
+      {% if risk.reasons %}
+      <div>
+        <div class="fw-600 mb-8">Risk Factors:</div>
+        {% set reason_list = risk.reasons if risk.reasons is iterable and risk.reasons is not string else risk.reasons.split(',') %}
+        {% for reason in reason_list %}
+          {% set r = reason | string | replace('[','') | replace(']','') | replace('"','') | trim %}
+          {% if r %}
+          <div style="padding:6px 0; border-bottom:1px solid var(--border); font-size:13px;">
+            ⚠️ {{ r }}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="mt-16" style="display:flex; gap:12px;">
+    <a href="{{ url_for('user.transactions') }}" class="btn btn-outline">← Back to Transactions</a>
+    {% if txn.status == 'EXECUTED' %}
+    <button onclick="window.print()" class="btn btn-primary">🖨️ Print Receipt</button>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

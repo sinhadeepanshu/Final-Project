@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify OTP – PayVanta AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>🔐 OTP Verification</h1>
+      <p>
+        {% if purpose == 'SIGNUP' %}Verify to complete registration
+        {% elif purpose == 'LOGIN' %}Verify to log in securely
+        {% else %}Confirm your payment
+        {% endif %}
+      </p>
+    </div>
+    <div class="auth-body">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+          <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      {% if dev_fallback %}
+      <div class="dev-banner">
+        <strong>LOCAL TESTING</strong> – OTP is shown here and printed in the terminal.<br>
+        {% if dev_code %}<strong>OTP: {{ dev_code }}</strong>{% endif %}
+      </div>
+      {% endif %}
+
+      <p style="text-align:center; color:var(--text-muted); margin-bottom:8px;">
+        OTP for <strong>{{ masked_phone }}</strong>
+      </p>
+
+      <form method="POST" id="otp-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="verify">
+        <div class="otp-inputs">
+          {% for i in range(1,7) %}
+          <input type="text" name="otp{{ i }}" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+          {% endfor %}
+        </div>
+        <div class="otp-timer">
+          <span id="otp-countdown">OTP expires in 5:00</span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Verify OTP</button>
+      </form>
+
+      <form method="POST" style="margin-top:12px; text-align:center;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="resend">
+        <button type="submit" id="resend-btn" class="btn btn-outline btn-sm" disabled>
+          Resend OTP
+        </button>
+      </form>
+
+      <p style="text-align:center; margin-top:16px;">
+        <a href="{{ url_for('auth.login') }}" class="text-muted text-sm">← Back to Login</a>
+      </p>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initOtpTimer(300);
+  initResendCooldown(30);
+});
+</script>
+</body>
+</html>

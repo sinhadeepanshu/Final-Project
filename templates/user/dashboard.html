@@ -1,0 +1,101 @@
+{% extends "user/base_user.html" %}
+{% block title %}Dashboard – PayVanta AI{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="mb-24">
+  {% if account %}
+  <div class="balance-card mb-24">
+    <div class="label">Available Balance</div>
+    <div class="amount">₹{{ account.balance | inr }}</div>
+    <div class="account-num">{{ account.bank_name }} &nbsp;|&nbsp; {{ account.account_number }} &nbsp;|&nbsp; {{ account.ifsc }}</div>
+    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a href="{{ url_for('user.transfer') }}" class="btn btn-primary" style="background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.3);">💸 New Transfer</a>
+      <a href="{{ url_for('user.transactions') }}" class="btn btn-outline" style="color:#fff; border-color:rgba(255,255,255,.3);">📋 History</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="label">KYC Status</div>
+      <div class="value" style="font-size:20px;">
+        <span class="badge badge-{{ user.kyc_status | lower }}">{{ user.kyc_status }}</span>
+      </div>
+      {% if user.kyc_status != 'VERIFIED' %}
+      <div class="sub"><a href="{{ url_for('user.profile') }}">Complete KYC →</a></div>
+      {% endif %}
+    </div>
+    <div class="stat-card">
+      <div class="label">Pending Approvals</div>
+      <div class="value">{{ pending_count }}</div>
+      <div class="sub">Awaiting admin review</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Total Sent</div>
+      <div class="value" style="font-size:20px;">₹{{ total_sent | inr }}</div>
+      <div class="sub">All executed transfers</div>
+    </div>
+  </div>
+
+  <!-- KYC warning -->
+  {% if user.kyc_status != 'VERIFIED' %}
+  <div class="flash flash-warning">
+    ⚠️ Complete your KYC to initiate transfers.
+    <a href="{{ url_for('user.profile') }}">Submit KYC →</a>
+  </div>
+  {% endif %}
+
+  <div class="grid-2 mt-24">
+    <!-- Recent Transactions -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Recent Transactions</h3>
+        <a href="{{ url_for('user.transactions') }}" class="btn btn-outline btn-sm">View All</a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Recipient</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            {% for txn in recent %}
+            <tr>
+              <td>
+                <a href="{{ url_for('user.transaction_detail', txn_id=txn.transaction_id) }}">
+                  {{ txn.receiver_name }}
+                </a>
+                <div class="text-muted text-sm">{{ txn.channel }}</div>
+              </td>
+              <td class="fw-600">₹{{ txn.amount | inr }}</td>
+              <td><span class="badge {{ txn.status | status_badge }}">{{ txn.status | replace('_', ' ') }}</span></td>
+              <td class="text-muted text-sm">{{ txn.created_at.strftime('%d %b %Y') }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:24px;">No transactions yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Spending Chart -->
+    <div class="card">
+      <div class="card-header"><h3>Monthly Spending</h3></div>
+      <div class="card-body">
+        <canvas id="spending-chart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const monthlyData = {{ monthly_data | safe }};
+document.addEventListener('DOMContentLoaded', () => {
+  initSpendingChart('spending-chart', monthlyData);
+});
+</script>
+{% endblock %}

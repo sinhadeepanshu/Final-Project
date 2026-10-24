@@ -1,0 +1,101 @@
+{% extends "user/base_user.html" %}
+{% block title %}New Transfer – PayVanta AI{% endblock %}
+{% block page_title %}New Transfer{% endblock %}
+
+{% block content %}
+<div style="max-width:680px;">
+  <div class="card">
+    <div class="card-header">
+      <h3>💸 Initiate High-Value Transfer</h3>
+      <span class="badge badge-info">RTGS / NEFT</span>
+    </div>
+    <div class="card-body">
+      <div class="flash flash-info" style="margin-bottom:20px;">
+        ⚡ Transfers require: KYC verified account, OTP confirmation, dual verification, and admin approval.
+      </div>
+
+      {% if not beneficiaries %}
+      <div class="flash flash-warning">
+        No beneficiaries added. <a href="{{ url_for('user.beneficiaries') }}">Add a beneficiary first →</a>
+      </div>
+      {% else %}
+      <form method="POST" id="transfer-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="form-group">
+          <label class="form-label">Select Beneficiary</label>
+          <select name="beneficiary_id" class="form-control" required>
+            <option value="">— Choose beneficiary —</option>
+            {% for b in beneficiaries %}
+            <option value="{{ b.id }}">{{ b.name }} — {{ b.account_number }} ({{ b.bank_name or b.ifsc }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Amount (₹)</label>
+          <input type="number" name="amount" id="amount-input" class="form-control"
+                 placeholder="200000" min="200000" max="10000000" step="1000" required>
+          <div class="form-text">
+            Range: <strong>₹2,00,000 – ₹10,00,000</strong> &nbsp;|&nbsp;
+            <span id="amount-display" style="color:var(--primary); font-weight:600;"></span>
+          </div>
+        </div>
+
+        <div class="grid-2 gap-16">
+          <div class="form-group">
+            <label class="form-label">Purpose</label>
+            <select name="purpose" class="form-control" required>
+              <option value="">— Select purpose —</option>
+              <option value="property">Property Purchase</option>
+              <option value="education">Education Fees</option>
+              <option value="medical">Medical Expenses</option>
+              <option value="business">Business Payment</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Channel</label>
+            <select name="channel" class="form-control">
+              <option value="RTGS">RTGS (Real Time)</option>
+              <option value="NEFT">NEFT (Batch)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Remarks (optional)</label>
+          <input type="text" name="remarks" class="form-control" placeholder="Payment for...">
+        </div>
+
+        <div class="flash flash-warning mt-8">
+          🔐 After submitting, you will receive an OTP to confirm this transaction.
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg mt-16" style="width:100%;"
+                onclick="return confirm('Proceed with this transfer?')">
+          Continue & Verify via OTP →
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Account info -->
+  {% if account %}
+  <div class="card mt-16">
+    <div class="card-body" style="display:flex; gap:20px; align-items:center;">
+      <div>
+        <div class="text-muted text-sm">Sending From</div>
+        <div class="fw-600">{{ account.bank_name }}</div>
+        <div class="text-muted text-sm" style="font-family:monospace">{{ account.account_number }}</div>
+      </div>
+      <div style="margin-left:auto; text-align:right;">
+        <div class="text-muted text-sm">Available Balance</div>
+        <div class="fw-700" style="font-size:20px;">₹{{ account.balance | inr }}</div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{
+  "3204c208-7af6-41e8-b802-bed07e913134": {
+    "log_id": "3204c208-7af6-41e8-b802-bed07e913134",
+    "transaction_id": null,
+    "event_type": "USER_CREATED",
+    "actor": "+918882254003",
+    "timestamp": {
+      "__dt__": "2026-10-24T08:42:29.569203"
+    },
+    "details": "New user Raj registered"
+  },
+  "645445db-17f8-4fbd-9579-4eb3e4461eac": {
+    "log_id": "645445db-17f8-4fbd-9579-4eb3e4461eac",
+    "transaction_id": null,
+    "event_type": "USER_LOGIN",
+    "actor": "+918882254003",
+    "timestamp": {
+      "__dt__": "2026-10-24T08:42:58.685022"
+    },
+    "details": "User logged in"
+  }
+}

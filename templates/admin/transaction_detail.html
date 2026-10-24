@@ -1,0 +1,253 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Review Transaction – PayVanta AI{% endblock %}
+{% block page_title %}Review Transaction{% endblock %}
+
+{% block content %}
+<div style="max-width:900px;">
+  <!-- Status -->
+  <div class="flash flash-{{ 'warning' if txn.status in ('PENDING_ADMIN_APPROVAL','PENDING_ADMIN_FINAL_APPROVAL') else ('info' if txn.status == 'PENDING_BANK_APPROVAL' else ('success' if txn.status=='EXECUTED' else 'danger')) }}">
+    Status: <strong>{{ txn.status | replace('_',' ') }}</strong>
+    {% if txn.bank_reference %} — Ref: <strong>{{ txn.bank_reference }}</strong>{% endif %}
+    {% if txn.reject_reason %} — {{ txn.reject_reason }}{% endif %}
+  </div>
+
+  <div class="grid-2">
+    <!-- Transfer Info -->
+    <div class="card">
+      <div class="card-header"><h3>💸 Transfer Details</h3></div>
+      <div class="card-body">
+        <table style="width:100%">
+          <tr><td class="text-muted" style="padding:8px 0;width:40%">Amount</td>
+              <td class="fw-700" style="font-size:20px;">₹{{ txn.amount | inr }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">In Words</td>
+              <td class="text-sm">{{ txn.amount | amount_words }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Recipient</td>
+              <td><strong>{{ txn.receiver_name }}</strong></td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Account</td>
+              <td style="font-family:monospace">{{ txn.receiver_acc }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">IFSC</td>
+              <td>{{ txn.receiver_ifsc }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Bank</td>
+              <td>{{ txn.receiver_bank or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Channel</td>
+              <td>{{ txn.channel }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Purpose</td>
+              <td>{{ txn.purpose | title }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Remarks</td>
+              <td>{{ txn.remarks or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Initiated</td>
+              <td>{{ txn.created_at.strftime('%d %b %Y, %H:%M') }}</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sender Info -->
+    <div class="card">
+      <div class="card-header"><h3>👤 Sender Information</h3></div>
+      <div class="card-body">
+        {% if sender_user %}
+        <table style="width:100%">
+          <tr><td class="text-muted" style="padding:8px 0;width:40%">Name</td>
+              <td><strong>{{ sender_user.name }}</strong></td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Phone</td>
+              <td>{{ sender_user.phone }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">KYC</td>
+              <td><span class="badge badge-{{ sender_user.kyc_status | lower }}">{{ sender_user.kyc_status }}</span></td></tr>
+          {% if sender_account %}
+          <tr><td class="text-muted" style="padding:8px 0">Account</td>
+              <td style="font-family:monospace">{{ sender_account.account_number }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Balance</td>
+              <td class="fw-600">₹{{ sender_account.balance | inr }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Status</td>
+              <td><span class="badge badge-{{ 'success' if sender_account.status=='ACTIVE' else 'danger' }}">{{ sender_account.status }}</span></td></tr>
+          {% endif %}
+          <tr><td class="text-muted" style="padding:8px 0">Member Since</td>
+              <td>{{ sender_user.created_at.strftime('%d %b %Y') }}</td></tr>
+        </table>
+        <div class="mt-16">
+          <a href="{{ url_for('admin.user_detail', user_id=sender_user.user_id) }}" class="btn btn-outline btn-sm">View Full Profile →</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Results -->
+  {% if verifications %}
+  <div class="card mt-16">
+    <div class="card-header"><h3>🔍 Dual Verification</h3></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Party</th><th>Result</th><th>Details</th></tr></thead>
+        <tbody>
+          {% for v in verifications %}
+          <tr>
+            <td>{{ v.party }}</td>
+            <td><span class="badge badge-{{ 'success' if v.result=='PASS' else 'danger' }}">{{ v.result }}</span></td>
+            <td>{{ v.details }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- AI Risk -->
+  {% if risk %}
+  <div class="card mt-16">
+    <div class="card-header">
+      <h3>🤖 AI Risk Assessment</h3>
+      <span class="badge badge-{{ risk.level | lower }}">{{ risk.level }} RISK — {{ risk.score | int }}/100</span>
+    </div>
+    <div class="card-body">
+      <div class="risk-bar risk-{{ risk.level | lower }} mb-16" style="height:14px;">
+        <div class="risk-bar-fill" style="width:{{ risk.score }}%"></div>
+      </div>
+      {% if risk.reasons %}
+      <div>
+        {% set reason_list = risk.reasons if risk.reasons is iterable and risk.reasons is not string else risk.reasons.split(',') %}
+        {% for reason in reason_list %}
+          {% set r = reason | string | replace('[','') | replace(']','') | replace('"','') | trim %}
+          {% if r %}
+          <div style="padding:6px 10px; background:#fef9c3; border-radius:6px; margin-bottom:6px; font-size:13px;">
+            ⚠️ {{ r }}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-muted">No specific risk flags.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Sender History -->
+  {% if history %}
+  <div class="card mt-16">
+    <div class="card-header"><h3>📋 Sender's Recent History (Executed)</h3></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Recipient</th><th>Amount</th><th>Channel</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for h in history %}
+          <tr>
+            <td>{{ h.receiver_name }}</td>
+            <td>₹{{ h.amount | inr }}</td>
+            <td>{{ h.channel }}</td>
+            <td class="text-muted text-sm">{{ h.created_at.strftime('%d %b %Y') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Approve / Reject -->
+  {% if txn.status == 'PENDING_ADMIN_APPROVAL' %}
+  <!-- ── STEP 1: Admin Review — Forward to Bank or Reject ── -->
+  <div class="card mt-16" style="border-left:4px solid #f59e0b;">
+    <div class="card-header" style="background:#fffbeb;">
+      <h3>📋 Step 1 — Admin Review</h3>
+      <span style="background:#fef3c7;color:#92400e;padding:3px 12px;border-radius:99px;font-size:12px;font-weight:600;">YOUR TURN</span>
+    </div>
+    <div class="card-body">
+      <p style="margin-bottom:16px;color:#555;font-size:14px;">
+        Review the transaction details above. If everything looks fine, forward it to the bank officer for their approval. You can also reject it directly.
+      </p>
+      <div class="grid-2 gap-16">
+        <form method="POST" action="{{ url_for('admin.forward_to_bank', txn_id=txn.transaction_id) }}"
+              onsubmit="return confirm('Forward this Rs {{ txn.amount | inr }} transfer to the bank for approval?')">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-primary" style="width:100%;">
+            🏦 Forward to Bank Officer
+          </button>
+          <div class="text-muted text-sm mt-4" style="text-align:center;">
+            Bank officer will review and approve/reject.
+          </div>
+        </form>
+        <div>
+          <form method="POST" action="{{ url_for('admin.reject_transaction', txn_id=txn.transaction_id) }}"
+                onsubmit="return this.querySelector('textarea').value.trim() !== '' || (alert('Please provide a rejection reason.'), false)">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+              <textarea name="reject_reason" class="form-control" rows="2"
+                        placeholder="Reason for rejection (required)…"></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger" style="width:100%;">❌ Reject Transaction</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% elif txn.status == 'PENDING_BANK_APPROVAL' %}
+  <!-- ── STEP 2: Waiting for Bank ── -->
+  <div class="card mt-16" style="border-left:4px solid #667eea;">
+    <div class="card-header" style="background:#f5f3ff;">
+      <h3>🏦 Step 2 — Waiting for Bank Officer</h3>
+      <span style="background:#ede9fe;color:#5b21b6;padding:3px 12px;border-radius:99px;font-size:12px;font-weight:600;">AT BANK</span>
+    </div>
+    <div class="card-body">
+      <p style="color:#555;font-size:14px;margin:0;">
+        This transaction has been forwarded to the bank officer
+        {% if bank_approval and bank_approval.forwarded_at %}
+          on <strong>{{ bank_approval.forwarded_at.strftime('%d %b %Y at %H:%M') }}</strong>
+        {% endif %}
+        . Waiting for their decision. No action needed from you right now.
+      </p>
+    </div>
+  </div>
+
+  {% elif txn.status == 'PENDING_ADMIN_FINAL_APPROVAL' %}
+  <!-- ── STEP 3: Final Admin Approval ── -->
+  <div class="card mt-16" style="border-left:4px solid #10b981;">
+    <div class="card-header" style="background:#f0fdf4;">
+      <h3>✅ Step 3 — Final Admin Decision</h3>
+      <span style="background:#d1fae5;color:#065f46;padding:3px 12px;border-radius:99px;font-size:12px;font-weight:600;">BANK APPROVED ✓</span>
+    </div>
+    <div class="card-body">
+      {% if bank_approval %}
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;">
+        🏦 <strong>Bank Officer:</strong> {{ bank_approval.officer_name or '—' }}<br>
+        📝 <strong>Remarks:</strong> {{ bank_approval.remarks or '—' }}<br>
+        🕐 <strong>Approved at:</strong> {{ bank_approval.decided_at.strftime('%d %b %Y, %H:%M') if bank_approval.decided_at else '—' }}
+      </div>
+      {% endif %}
+      <p style="margin-bottom:16px;color:#555;font-size:14px;">
+        The bank has approved this transaction. Give your final approval to execute the transfer, or reject if you have concerns.
+      </p>
+      <div class="grid-2 gap-16">
+        <form method="POST" action="{{ url_for('admin.approve_transaction', txn_id=txn.transaction_id) }}"
+              onsubmit="return confirm('Final approve and execute this Rs {{ txn.amount | inr }} transfer?')">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-success" style="width:100%;">
+            ✅ Final Approve & Execute Transfer
+          </button>
+          <div class="text-muted text-sm mt-4" style="text-align:center;">
+            Will debit sender and execute via bank gateway.
+          </div>
+        </form>
+        <div>
+          <form method="POST" action="{{ url_for('admin.reject_transaction', txn_id=txn.transaction_id) }}"
+                onsubmit="return this.querySelector('textarea').value.trim() !== '' || (alert('Please provide a rejection reason.'), false)">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+              <textarea name="reject_reason" class="form-control" rows="2"
+                        placeholder="Reason for rejection (required)…"></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger" style="width:100%;">❌ Reject Transaction</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="mt-16">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">← Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

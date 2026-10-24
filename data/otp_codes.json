@@ -1,0 +1,40 @@
+{
+  "bdf52e61-ff8e-47d9-ac0f-8fd9bf042c55": {
+    "id": "bdf52e61-ff8e-47d9-ac0f-8fd9bf042c55",
+    "phone": "+918882254003",
+    "purpose": "SIGNUP",
+    "transaction_id": null,
+    "otp_hash": "scrypt:32768:8:1$NAg5PJN7DcBhggUz$d6b4477ec546741bdb5562a62dc64f1a02c765a8bac7008c15c8e90f5c77ba0a35fd32fbeb9c816be6af80359539274498d085e749c79009483b5b0a903dcde8",
+    "expires_at": {
+      "__dt__": "2026-10-24T08:47:22.656925"
+    },
+    "attempts": 0,
+    "used": true,
+    "resend_count": 0,
+    "last_sent_at": {
+      "__dt__": "2026-10-24T08:42:22.942120"
+    },
+    "created_at": {
+      "__dt__": "2026-10-24T08:42:22.942120"
+    }
+  },
+  "80b8d2b5-403f-4d1a-ab70-829c2617a7c6": {
+    "id": "80b8d2b5-403f-4d1a-ab70-829c2617a7c6",
+    "phone": "+918882254003",
+    "purpose": "LOGIN",
+    "transaction_id": null,
+    "otp_hash": "scrypt:32768:8:1$JZame0OXauj0Rjmb$3e0536908f2a88c60b4aaed7cba90a516e6a6323e21b28783a98029cb1744957288602057c82db14ae44f6e81dd1cae11dd5f4ed79b77ae0457bc05102466c0c",
+    "expires_at": {
+      "__dt__": "2026-10-24T08:47:49.715025"
+    },
+    "attempts": 0,
+    "used": true,
+    "resend_count": 0,
+    "last_sent_at": {
+      "__dt__": "2026-10-24T08:42:50.070082"
+    },
+    "created_at": {
+      "__dt__": "2026-10-24T08:42:50.070082"
+    }
+  }
+}

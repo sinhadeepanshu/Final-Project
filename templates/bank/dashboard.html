@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Officer Dashboard - PayVanta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0 30px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-brand { font-size: 20px; font-weight: 700; }
+        .navbar-right { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .navbar-right a { color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.2s; }
+        .navbar-right a:hover { color: white; }
+        .navbar-right .logout-btn {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .navbar-right .logout-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* Layout */
+        .page-wrapper { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .stat-card .stat-number {
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .stat-card .stat-label { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-pending .stat-number  { color: #f39c12; }
+        .stat-approved .stat-number { color: #27ae60; }
+        .stat-rejected .stat-number { color: #e74c3c; }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .section-header h2 { font-size: 20px; font-weight: 600; }
+
+        /* Table */
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #f8f9fa; }
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #eee;
+        }
+        td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafbff; }
+
+        /* Risk badges */
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .risk-low    { background: #d4edda; color: #155724; }
+        .risk-medium { background: #fff3cd; color: #856404; }
+        .risk-high   { background: #f8d7da; color: #721c24; }
+
+        /* Amount */
+        .amount { font-weight: 600; color: #2c3e50; }
+
+        /* Action button */
+        .btn-review {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 7px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .btn-review:hover { opacity: 0.85; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-state p { color: #888; font-size: 15px; }
+
+        /* Alert */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-danger  { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .alert-info    { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+
+        /* Sender info in table */
+        .sender-info { font-size: 13px; }
+        .sender-name { font-weight: 500; }
+        .sender-acc  { color: #888; font-size: 12px; }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .navbar { padding: 0 15px; }
+            .page-wrapper { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-brand">🏦 PayVanta Bank Officer Portal</div>
+    <div class="navbar-right">
+        <span>👤 {{ officer.name }}</span>
+        <a href="{{ url_for('bank.logout') }}" class="logout-btn">Logout</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card stat-pending">
+            <div class="stat-number">{{ total_pending }}</div>
+            <div class="stat-label">Pending Review</div>
+        </div>
+        <div class="stat-card stat-approved">
+            <div class="stat-number">{{ total_approved }}</div>
+            <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-card stat-rejected">
+            <div class="stat-number">{{ total_rejected }}</div>
+            <div class="stat-label">Rejected</div>
+        </div>
+    </div>
+
+    <!-- Pending Transactions Table -->
+    <div class="section-header">
+        <h2>📋 Transactions Pending Bank Approval</h2>
+    </div>
+
+    <div class="table-card">
+        {% if items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Amount</th>
+                    <th>Channel</th>
+                    <th>Risk</th>
+                    <th>Submitted</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td style="color:#aaa; font-size:12px;">{{ loop.index }}</td>
+                    <td class="sender-info">
+                        <div class="sender-name">{{ item.sender.name if item.sender else '—' }}</div>
+                        <div class="sender-acc">{{ item.account.account_number[-4:] | default('—') }} • {{ item.account.bank_name if item.account else '' }}</div>
+                    </td>
+                    <td class="sender-info">
+                        <div class="sender-name">{{ item.txn.receiver_name }}</div>
+                        <div class="sender-acc">{{ item.txn.receiver_ifsc }}</div>
+                    </td>
+                    <td class="amount">₹{{ item.txn.amount | inr }}</td>
+                    <td>
+                        <span style="background:#e8eaf6; color:#3949ab; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600;">
+                            {{ item.txn.channel }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if item.risk %}
+                            <span class="risk-badge risk-{{ item.risk.level | lower }}">
+                                {{ item.risk.level }} ({{ item.risk.score | int }})
+                            </span>
+                        {% else %}
+                            <span class="risk-badge" style="background:#eee; color:#999;">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-size:12px; color:#888;">
+                        {{ item.approval.created_at.strftime('%d %b %Y, %H:%M') if item.approval.created_at else '—' }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('bank.transaction_detail', txn_id=item.txn.transaction_id) }}" class="btn-review">
+                            Review →
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <p>No transactions pending bank approval. All clear!</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+</body>
+</html>

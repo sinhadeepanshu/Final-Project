@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block sidebar_role %}Admin Panel{% endblock %}
+{% block logout_url %}{{ url_for('auth.logout_admin') }}{% endblock %}
+
+{% block sidebar_user %}
+  <div style="margin-bottom:6px; font-size:13px; color:#94a3b8;">{{ admin.name }}</div>
+{% endblock %}
+
+{% block topbar_actions %}
+  <span class="badge badge-danger">ADMIN</span>
+  <div class="avatar" style="background:var(--danger);">{{ admin.name[0].upper() }}</div>
+{% endblock %}
+
+{% block sidebar_links %}
+  <div class="sidebar-section">Overview</div>
+  <a href="{{ url_for('admin.dashboard') }}"><span class="icon">🏠</span> Dashboard</a>
+  <div class="sidebar-section">Management</div>
+  <a href="{{ url_for('admin.bank_applications') }}"><span class="icon">🏦</span> Bank Applications</a>
+  <a href="{{ url_for('admin.users') }}"><span class="icon">👥</span> User Management</a>
+  <a href="{{ url_for('admin.blacklist') }}"><span class="icon">🚫</span> Blacklist</a>
+  <div class="sidebar-section">Logs</div>
+  <a href="{{ url_for('admin.audit_logs') }}"><span class="icon">📜</span> Audit Logs</a>
+{% endblock %}

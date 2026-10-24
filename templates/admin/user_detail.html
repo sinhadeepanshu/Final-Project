@@ -1,0 +1,97 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}User: {{ target.name }} – PayVanta AI{% endblock %}
+{% block page_title %}User: {{ target.name }}{% endblock %}
+
+{% block content %}
+<div style="max-width:900px;">
+  <div class="grid-2">
+    <!-- User Info -->
+    <div class="card">
+      <div class="card-header">
+        <h3>👤 User Profile</h3>
+        <span class="badge badge-{{ target.kyc_status | lower }}">KYC: {{ target.kyc_status }}</span>
+      </div>
+      <div class="card-body">
+        <table style="width:100%">
+          <tr><td class="text-muted" style="padding:8px 0;width:40%">Name</td><td><strong>{{ target.name }}</strong></td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Phone</td><td>{{ target.phone }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Email</td><td>{{ target.email }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">KYC Status</td><td><span class="badge badge-{{ target.kyc_status | lower }}">{{ target.kyc_status }}</span></td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">PAN</td><td>{{ target.kyc_pan or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Aadhaar Last 4</td><td>{{ target.kyc_aadhaar_last4 or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Address</td><td>{{ target.kyc_address or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Joined</td><td>{{ target.created_at.strftime('%d %b %Y') }}</td></tr>
+          {% for acc in accounts %}
+          <tr><td class="text-muted" style="padding:8px 0">Account</td>
+              <td>{{ acc.account_number }} — <span class="badge badge-{{ 'success' if acc.status=='ACTIVE' else 'danger' }}">{{ acc.status }}</span></td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Balance</td>
+              <td class="fw-700">₹{{ acc.balance | inr }}</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+
+    <!-- Admin Actions -->
+    <div class="card">
+      <div class="card-header"><h3>⚙️ Admin Actions</h3></div>
+      <div class="card-body" style="display:flex; flex-direction:column; gap:10px;">
+        {% if target.kyc_status == 'PENDING' %}
+        <form method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="action" value="verify_kyc">
+          <button type="submit" class="btn btn-success" style="width:100%;">✅ Verify KYC</button>
+        </form>
+        <form method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="action" value="reject_kyc">
+          <button type="submit" class="btn btn-danger" style="width:100%;" onclick="return confirm('Reject KYC?')">❌ Reject KYC</button>
+        </form>
+        {% endif %}
+        {% for acc in accounts %}
+          {% if acc.status == 'ACTIVE' %}
+          <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="freeze">
+            <button type="submit" class="btn btn-warning" style="width:100%;" onclick="return confirm('Freeze account?')">🔒 Freeze Account</button>
+          </form>
+          {% else %}
+          <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="unfreeze">
+            <button type="submit" class="btn btn-success" style="width:100%;">🔓 Unfreeze Account</button>
+          </form>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction History -->
+  <div class="card mt-16">
+    <div class="card-header"><h3>📋 Recent Transactions</h3></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Transaction ID</th><th>Recipient</th><th>Amount</th><th>Status</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          {% for txn in txns %}
+          <tr>
+            <td style="font-family:monospace; font-size:11px;">{{ txn.transaction_id[:8] }}…</td>
+            <td>{{ txn.receiver_name }}</td>
+            <td class="fw-600">₹{{ txn.amount | inr }}</td>
+            <td><span class="badge {{ txn.status | status_badge }}">{{ txn.status | replace('_',' ') }}</span></td>
+            <td class="text-muted text-sm">{{ txn.created_at.strftime('%d %b %Y') }}</td>
+            <td><a href="{{ url_for('admin.transaction_detail', txn_id=txn.transaction_id) }}" class="btn btn-outline btn-sm">View</a></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">No transactions.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-16">
+    <a href="{{ url_for('admin.users') }}" class="btn btn-outline">← Back to Users</a>
+  </div>
+</div>
+{% endblock %}

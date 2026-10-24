@@ -1,0 +1,64 @@
+{% extends "user/base_user.html" %}
+{% block title %}Beneficiaries – PayVanta AI{% endblock %}
+{% block page_title %}Beneficiaries{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <!-- Add Beneficiary -->
+  <div class="card">
+    <div class="card-header"><h3>➕ Add Beneficiary</h3></div>
+    <div class="card-body">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="add">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-control" placeholder="Rahul Sharma" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input type="text" name="account_number" class="form-control" placeholder="9–18 digits" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">IFSC Code</label>
+          <input type="text" name="ifsc" class="form-control" placeholder="HDFC0001234" maxlength="11" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bank Name</label>
+          <input type="text" name="bank_name" class="form-control" placeholder="HDFC Bank">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Beneficiary</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- List -->
+  <div class="card">
+    <div class="card-header"><h3>👥 Saved Beneficiaries</h3></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Account</th><th>IFSC</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for b in beneficiaries %}
+          <tr>
+            <td><strong>{{ b.name }}</strong><div class="text-muted text-sm">{{ b.bank_name }}</div></td>
+            <td style="font-family:monospace">{{ b.account_number }}</td>
+            <td>{{ b.ifsc }}</td>
+            <td>
+              <form method="POST" style="display:inline" onsubmit="return confirm('Remove beneficiary?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="bene_id" value="{{ b.id }}">
+                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:24px;">No beneficiaries added yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

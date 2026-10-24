@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Payment – PayVanta AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>💸 Confirm Payment</h1>
+      <p>OTP verification required</p>
+    </div>
+    <div class="auth-body">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+          <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      {% if dev_fallback %}
+      <div class="dev-banner">
+        <strong>LOCAL TESTING</strong> – OTP is shown here and printed in the terminal.
+        {% if dev_code %}<br><strong>OTP: {{ dev_code }}</strong>{% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Transaction Summary -->
+      <div style="background:#f8fafc; border-radius:10px; padding:16px; margin-bottom:16px; border:1px solid var(--border);">
+        <div class="flex-between mb-8">
+          <span class="text-muted text-sm">Amount</span>
+          <span class="fw-700" style="font-size:18px;">₹{{ txn.amount | inr }}</span>
+        </div>
+        <div class="text-muted text-sm" style="text-align:center;">
+          {{ txn.amount | amount_words }}
+        </div>
+        <hr style="margin:10px 0; border:none; border-top:1px solid var(--border);">
+        <div class="flex-between">
+          <span class="text-muted text-sm">To</span>
+          <span class="fw-600">{{ txn.receiver_name }}</span>
+        </div>
+        <div class="flex-between mt-4">
+          <span class="text-muted text-sm">Account</span>
+          <span style="font-family:monospace; font-size:12px;">{{ txn.receiver_acc }}</span>
+        </div>
+        <div class="flex-between mt-4">
+          <span class="text-muted text-sm">Channel</span>
+          <span>{{ txn.channel }}</span>
+        </div>
+      </div>
+
+      <p style="text-align:center; color:var(--text-muted); font-size:13px; margin-bottom:4px;">
+        OTP for <strong>{{ masked_phone }}</strong>
+      </p>
+
+      <form method="POST" id="otp-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="verify">
+        <div class="otp-inputs">
+          {% for i in range(1,7) %}
+          <input type="text" name="otp{{ i }}" class="otp-input" maxlength="1" inputmode="numeric">
+          {% endfor %}
+        </div>
+        <div class="otp-timer"><span id="otp-countdown"></span></div>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">
+          Confirm Transfer
+        </button>
+      </form>
+
+      <form method="POST" style="margin-top:12px; text-align:center;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="resend">
+        <button type="submit" id="resend-btn" class="btn btn-outline btn-sm" disabled>Resend OTP</button>
+      </form>
+
+      <p style="text-align:center; margin-top:12px;">
+        <a href="{{ url_for('user.transfer') }}" class="text-muted text-sm">← Cancel & go back</a>
+      </p>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initOtpTimer(300);
+  initResendCooldown(30);
+});
+</script>
+</body>
+</html>

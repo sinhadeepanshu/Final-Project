@@ -1,0 +1,55 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Blacklist – PayVanta AI{% endblock %}
+{% block page_title %}Account Blacklist{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header"><h3>🚫 Add to Blacklist</h3></div>
+    <div class="card-body">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="add">
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input type="text" name="account_number" class="form-control" placeholder="9–18 digits" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reason</label>
+          <textarea name="reason" class="form-control" rows="3" placeholder="Fraud / suspicious activity..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-danger">🚫 Add to Blacklist</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>📋 Blacklisted Accounts</h3></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Account</th><th>Reason</th><th>Added By</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for entry in entries %}
+          <tr>
+            <td style="font-family:monospace">{{ entry.account_number }}</td>
+            <td>{{ entry.reason }}</td>
+            <td class="text-muted text-sm">{{ entry.added_by }}</td>
+            <td class="text-muted text-sm">{{ entry.created_at.strftime('%d %b %Y') }}</td>
+            <td>
+              <form method="POST" onsubmit="return confirm('Remove from blacklist?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="action" value="remove">
+                <input type="hidden" name="bl_id" value="{{ entry.id }}">
+                <button type="submit" class="btn btn-outline btn-sm">Remove</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:24px;">No blacklisted accounts.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Audit Logs – PayVanta AI{% endblock %}
+{% block page_title %}Audit Logs{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>📜 Audit Trail</h3>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <form method="GET" style="display:flex; gap:8px;">
+        <input type="text" name="event" class="form-control" style="width:140px;"
+               placeholder="Event type" value="{{ event_filter }}">
+        <input type="text" name="actor" class="form-control" style="width:140px;"
+               placeholder="Actor (phone)" value="{{ actor_filter }}">
+        <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+        <a href="{{ url_for('admin.audit_logs') }}" class="btn btn-outline btn-sm">Clear</a>
+      </form>
+      <a href="{{ url_for('admin.audit_logs', export='csv', event=event_filter, actor=actor_filter) }}"
+         class="btn btn-outline btn-sm">📥 Export CSV</a>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Event</th>
+          <th>Actor</th>
+          <th>Transaction</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td class="text-muted text-sm">{{ log.timestamp.strftime('%d %b %Y %H:%M:%S') }}</td>
+          <td><span class="badge badge-info">{{ log.event_type }}</span></td>
+          <td style="font-family:monospace; font-size:12px;">{{ log.actor }}</td>
+          <td style="font-family:monospace; font-size:11px;">
+            {% if log.transaction_id %}{{ log.transaction_id[:8] }}…{% else %}—{% endif %}
+          </td>
+          <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ log.details }}">
+            {{ log.details }}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:32px;">No audit logs found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

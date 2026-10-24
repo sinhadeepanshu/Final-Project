@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Officer Application - PayVanta</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    .bank-signup-wrap { min-height:100vh; display:grid; place-items:center; padding:24px; background:#eef3f6; }
+    .bank-signup-card { width:min(100%, 520px); padding:36px; background:#fff; border-top:4px solid #167d72; box-shadow:0 16px 44px rgba(24,50,58,.12); }
+    .bank-signup-card h1 { margin:0 0 8px; color:#18323a; font-size:26px; }
+    .bank-signup-card > p { margin:0 0 24px; color:#617078; line-height:1.5; }
+    .bank-signup-card .form-group { margin-bottom:16px; }
+    .bank-signup-card label { display:block; margin-bottom:6px; font-weight:600; color:#263f46; }
+    .bank-signup-card input { box-sizing:border-box; width:100%; padding:11px 12px; border:1px solid #cbd5d8; border-radius:4px; font:inherit; }
+    .bank-signup-card input:focus { outline:2px solid #167d72; outline-offset:1px; }
+    .bank-signup-card button { width:100%; margin-top:8px; padding:12px; border:0; border-radius:4px; background:#167d72; color:white; font:inherit; font-weight:700; cursor:pointer; }
+    .bank-application-note { margin:0 0 20px; padding:12px 14px; background:#edf6f4; border-left:3px solid #167d72; color:#315b56; font-size:14px; }
+    .bank-signup-alert { margin-bottom:16px; padding:11px 13px; border-radius:4px; background:#fff1ef; color:#9c3127; }
+    .bank-signup-alert.alert-success { background:#edf6f0; color:#25603a; }
+    .bank-signup-links { margin-top:18px; text-align:center; }
+    .bank-signup-links a { color:#167d72; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <main class="bank-signup-wrap">
+    <section class="bank-signup-card">
+      <h1>Bank Officer Application</h1>
+      <p>Bank portal access is enabled only after an administrator reviews and approves your application.</p>
+      <div class="bank-application-note">Submit your bank and contact details. Your password is stored securely and is not usable for sign-in until approval.</div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="bank-signup-alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('bank.signup') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+          <label for="bank_name">Bank name</label>
+          <input id="bank_name" name="bank_name" maxlength="120" autocomplete="organization" required>
+        </div>
+        <div class="form-group">
+          <label for="name">Applicant name</label>
+          <input id="name" name="name" maxlength="120" autocomplete="name" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" maxlength="120" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" minlength="8" autocomplete="new-password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm_password">Confirm password</label>
+          <input id="confirm_password" name="confirm_password" type="password" minlength="8" autocomplete="new-password" required>
+        </div>
+        <button type="submit">Submit application</button>
+      </form>
+
+      <div class="bank-signup-links"><a href="{{ url_for('bank.login') }}">Back to bank officer login</a></div>
+    </section>
+  </main>
+</body>
+</html>

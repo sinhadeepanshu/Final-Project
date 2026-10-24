@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block sidebar_role %}User Panel{% endblock %}
+{% block logout_url %}{{ url_for('auth.logout_user') }}{% endblock %}
+
+{% block sidebar_user %}
+  <div style="margin-bottom:6px; font-size:13px; color:#94a3b8;">{{ user.name }}</div>
+{% endblock %}
+
+{% block topbar_actions %}
+  {% set unread = namespace(count=0) %}
+  <a href="{{ url_for('user.notifications') }}" class="btn btn-outline btn-sm">
+    🔔 Notifications
+  </a>
+  <div class="avatar">{{ user.name[0].upper() }}</div>
+{% endblock %}
+
+{% block sidebar_links %}
+  <a href="{{ url_for('user.dashboard') }}"><span class="icon">🏠</span> Dashboard</a>
+  <a href="{{ url_for('user.transfer') }}"><span class="icon">💸</span> New Transfer</a>
+  <a href="{{ url_for('user.transactions') }}"><span class="icon">📋</span> Transactions</a>
+  <a href="{{ url_for('user.beneficiaries') }}"><span class="icon">👥</span> Beneficiaries</a>
+  <a href="{{ url_for('user.notifications') }}"><span class="icon">🔔</span> Notifications</a>
+  <a href="{{ url_for('user.profile') }}"><span class="icon">👤</span> Profile & KYC</a>
+{% endblock %}

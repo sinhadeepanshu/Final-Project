@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><title>Error – PayVanta AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head><body>
+<div class="auth-wrap">
+  <div class="auth-card" style="text-align:center; padding:40px;">
+    <div style="font-size:64px; margin-bottom:16px;">🏦</div>
+    <h1 style="font-size:48px; font-weight:700; color:#1a56db;">{{ code }}</h1>
+    <p style="color:#64748b; margin:12px 0 24px;">{{ message }}</p>
+    <a href="/" class="btn btn-primary">Go to Login</a>
+  </div>
+</div>
+</body></html>

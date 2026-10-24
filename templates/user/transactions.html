@@ -1,0 +1,62 @@
+{% extends "user/base_user.html" %}
+{% block title %}Transactions – PayVanta AI{% endblock %}
+{% block page_title %}Transaction History{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>📋 All Transactions</h3>
+    <form method="GET" style="display:flex; gap:8px; align-items:center;">
+      <input type="text" name="q" class="form-control" style="width:200px;"
+             placeholder="Search name / account..." value="{{ search_q }}">
+      <select name="status" class="form-control" style="width:180px;">
+        <option value="">All Status</option>
+        <option value="EXECUTED" {% if status_filter=='EXECUTED' %}selected{% endif %}>Executed</option>
+        <option value="PENDING_ADMIN_APPROVAL" {% if status_filter=='PENDING_ADMIN_APPROVAL' %}selected{% endif %}>Pending Approval</option>
+        <option value="REJECTED" {% if status_filter=='REJECTED' %}selected{% endif %}>Rejected</option>
+        <option value="FAILED" {% if status_filter=='FAILED' %}selected{% endif %}>Failed</option>
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+      <a href="{{ url_for('user.transactions') }}" class="btn btn-outline btn-sm">Clear</a>
+    </form>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Recipient</th>
+          <th>Amount</th>
+          <th>Channel</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+        <tr>
+          <td style="font-family:monospace; font-size:11px;">{{ txn.transaction_id[:8] }}…</td>
+          <td>
+            <strong>{{ txn.receiver_name }}</strong>
+            <div class="text-muted text-sm">{{ txn.receiver_acc[-6:] if txn.receiver_acc else '' }}</div>
+          </td>
+          <td class="fw-600">₹{{ txn.amount | inr }}</td>
+          <td>{{ txn.channel }}</td>
+          <td>
+            <span class="badge {{ txn.status | status_badge }}">{{ txn.status | replace('_', ' ') }}</span>
+            {% if txn.reject_reason %}
+            <div class="text-danger text-sm mt-4" title="{{ txn.reject_reason }}">⚠️ {{ txn.reject_reason[:40] }}…</div>
+            {% endif %}
+          </td>
+          <td class="text-muted text-sm">{{ txn.created_at.strftime('%d %b %Y %H:%M') }}</td>
+          <td><a href="{{ url_for('user.transaction_detail', txn_id=txn.transaction_id) }}" class="btn btn-outline btn-sm">View</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:32px;">No transactions found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

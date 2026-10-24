@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login – PayVanta AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    .admin-badge {
+      display: inline-block;
+      background: #1e293b;
+      color: #f8fafc;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+    .admin-card-border {
+      border-top: 4px solid #1e293b;
+    }
+  </style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card admin-card-border">
+    <div class="auth-header">
+      <span class="admin-badge">🔐 Admin Portal</span>
+      <h1>🏦 PayVanta AI</h1>
+      <p>Administrator Access Only</p>
+    </div>
+    <div class="auth-body">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+          <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <div class="dev-banner" style="margin-bottom:18px; background:#f1f5f9; border-left:4px solid #1e293b; color:#1e293b;">
+        <strong>🔐 Restricted Access</strong> – This page is for administrators only.
+      </div>
+
+      <form method="POST" action="{{ url_for('auth.admin_login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+          <label class="form-label">Admin Phone / Email</label>
+          <input type="text" name="identifier" class="form-control"
+                 placeholder="Admin phone or email" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control"
+                 placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary"
+                style="width:100%; background:#1e293b; border-color:#1e293b;">
+          Admin Login →
+        </button>
+      </form>
+
+      <p style="text-align:center; margin-top:16px;">
+        <a href="{{ url_for('auth.login') }}" class="text-muted text-sm">← Back to User Login</a>
+      </p>
+      <p class="text-muted text-sm mt-8" style="text-align:center">
+        Secured with OTP verification &amp; AI fraud detection
+      </p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

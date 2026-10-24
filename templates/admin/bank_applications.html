@@ -1,0 +1,57 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Bank Applications - PayVanta AI{% endblock %}
+{% block page_title %}Bank Officer Applications{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>🏦 Applications</h3>
+    <span class="badge badge-info">{{ applications | selectattr('status', 'equalto', 'PENDING') | list | length }} pending</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Bank / Applicant</th>
+          <th>Contact</th>
+          <th>Submitted</th>
+          <th>Status</th>
+          <th>Review</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for application in applications %}
+        <tr>
+          <td>
+            <strong>{{ application.bank_name }}</strong><br>
+            <span class="text-muted text-sm">{{ application.applicant_name }}</span>
+          </td>
+          <td>{{ application.phone }}<br><span class="text-muted text-sm">{{ application.email }}</span></td>
+          <td class="text-muted text-sm">{{ application.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+          <td><span class="badge badge-{{ 'warning' if application.status == 'PENDING' else ('success' if application.status == 'APPROVED' else 'danger') }}">{{ application.status }}</span></td>
+          <td>
+            {% if application.status == 'PENDING' %}
+            <form method="POST" action="{{ url_for('admin.bank_applications') }}" style="min-width:190px;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="application_id" value="{{ application.id }}">
+              <input type="text" name="reason" class="form-control" placeholder="Rejection reason" aria-label="Rejection reason">
+              <div style="display:flex; gap:8px; margin-top:8px;">
+                <button class="btn btn-primary btn-sm" type="submit" name="action" value="approve">Approve</button>
+                <button class="btn btn-outline btn-sm" type="submit" name="action" value="reject" onclick="this.form.elements.reason.required=true">Reject</button>
+              </div>
+            </form>
+            {% elif application.review_reason %}
+            <span class="text-muted text-sm">{{ application.review_reason }}</span>
+            {% else %}
+            <span class="text-muted text-sm">Reviewed {{ application.reviewed_at.strftime('%d %b %Y') if application.reviewed_at else '' }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:24px;">No bank applications yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "user/base_user.html" %}
+{% block title %}Profile & KYC – PayVanta AI{% endblock %}
+{% block page_title %}Profile & KYC{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <!-- Profile Card -->
+  <div class="card">
+    <div class="card-header"><h3>👤 Account Details</h3></div>
+    <div class="card-body">
+      <table style="width:100%">
+        <tr><td class="text-muted" style="padding:8px 0;width:40%">Name</td><td><strong>{{ user.name }}</strong></td></tr>
+        <tr><td class="text-muted" style="padding:8px 0">Phone</td><td>{{ user.phone }}</td></tr>
+        <tr><td class="text-muted" style="padding:8px 0">Email</td><td>{{ user.email }}</td></tr>
+        <tr><td class="text-muted" style="padding:8px 0">KYC Status</td><td><span class="badge badge-{{ user.kyc_status | lower }}">{{ user.kyc_status }}</span></td></tr>
+        {% if account %}
+        <tr><td class="text-muted" style="padding:8px 0">Account No.</td><td style="font-family:monospace">{{ account.account_number }}</td></tr>
+        <tr><td class="text-muted" style="padding:8px 0">IFSC</td><td>{{ account.ifsc }}</td></tr>
+        <tr><td class="text-muted" style="padding:8px 0">Balance</td><td><strong>₹{{ account.balance | inr }}</strong></td></tr>
+        <tr><td class="text-muted" style="padding:8px 0">Account Status</td><td><span class="badge badge-{{ 'success' if account.status=='ACTIVE' else 'danger' }}">{{ account.status }}</span></td></tr>
+        {% endif %}
+      </table>
+      <div class="mt-16">
+        <a href="{{ url_for('user.change_password') }}" class="btn btn-outline btn-sm">🔑 Change Password</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- KYC Form -->
+  <div class="card">
+    <div class="card-header"><h3>📋 KYC Verification</h3></div>
+    <div class="card-body">
+      {% if user.kyc_status == 'VERIFIED' %}
+        <div class="flash flash-success">✅ Your KYC is verified. You can initiate transfers.</div>
+        <table style="width:100%">
+          <tr><td class="text-muted" style="padding:8px 0;width:40%">PAN</td><td>{{ user.kyc_pan or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Aadhaar Last 4</td><td>XXXX XXXX {{ user.kyc_aadhaar_last4 or '—' }}</td></tr>
+          <tr><td class="text-muted" style="padding:8px 0">Address</td><td>{{ user.kyc_address or '—' }}</td></tr>
+        </table>
+      {% elif user.kyc_status == 'REJECTED' %}
+        <div class="flash flash-danger">❌ KYC rejected. Please resubmit with correct details.</div>
+        <form method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="action" value="kyc">
+          {% include "user/_kyc_form.html" %}
+        </form>
+      {% else %}
+        {% if user.kyc_pan %}
+          <div class="flash flash-warning">⏳ KYC submitted. Awaiting admin review.</div>
+        {% else %}
+          <p class="text-muted mb-16">Submit your KYC documents to enable transfers.</p>
+          <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="kyc">
+            {% include "user/_kyc_form.html" %}
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "user/base_user.html" %}
+{% block title %}Notifications – PayVanta AI{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width:700px;">
+  <div class="card-header"><h3>🔔 Notifications</h3></div>
+  <div>
+    {% for n in notifications %}
+    <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:flex-start;">
+      <div style="margin-top:3px; font-size:16px;">
+        {{ '✅' if '✅' in n.message else ('❌' if '❌' in n.message else '📢') }}
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:13.5px;">{{ n.message }}</div>
+        <div class="text-muted text-sm mt-4">{{ n.created_at.strftime('%d %b %Y, %H:%M') }}</div>
+      </div>
+    </div>
+    {% else %}
+    <div style="padding:32px; text-align:center; color:var(--text-muted);">No notifications yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

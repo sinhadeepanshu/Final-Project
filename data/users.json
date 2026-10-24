@@ -1,0 +1,98 @@
+{
+  "a46702ed-4541-443c-9c80-8a42176cd63c": {
+    "user_id": "a46702ed-4541-443c-9c80-8a42176cd63c",
+    "name": "PayVanta Admin",
+    "phone": "+919999999999",
+    "email": "admin@payvanta.in",
+    "password_hash": "scrypt:32768:8:1$epsCJGsegI1wfxhn$3dcd798fb67cce338d72d7b6e6babe8dba4937ad5119320a353676520c81165e59151d79cf55f4788a449c32e3649e1b7166febbc9b6779947b4ebf7efdd5cf7",
+    "role": "ADMIN",
+    "kyc_status": "VERIFIED",
+    "kyc_pan": null,
+    "kyc_aadhaar_last4": null,
+    "kyc_address": null,
+    "is_active": true,
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:51.340564"
+    }
+  },
+  "a9f4d9b6-ce15-4054-8abf-46c9b519f853": {
+    "user_id": "a9f4d9b6-ce15-4054-8abf-46c9b519f853",
+    "name": "PayVanta Bank Officer",
+    "phone": "+919888888888",
+    "email": "officer@payvanta.in",
+    "password_hash": "scrypt:32768:8:1$dYJMkpVXkJiwtZfp$32966563ea88b44a7791fe9376efeaf684a3a8fb19552029060fc4aab5da22059d7d7ddd02da72dcaebaa16dcde4199f9890f36c9dbbff78a431ba5e86ff5243",
+    "role": "BANK_OFFICER",
+    "kyc_status": "VERIFIED",
+    "kyc_pan": null,
+    "kyc_aadhaar_last4": null,
+    "kyc_address": null,
+    "is_active": true,
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:51.505521"
+    }
+  },
+  "56ee0010-542f-4e2a-be0b-1845bfc1a6c9": {
+    "user_id": "56ee0010-542f-4e2a-be0b-1845bfc1a6c9",
+    "name": "Rahul Sharma",
+    "phone": "+919876543210",
+    "email": "rahul@demo.in",
+    "password_hash": "scrypt:32768:8:1$VK7mQeVFXZzr6cD2$7277ead69815e07c29e4c8daa18d6038db02dde1e21331294f79b18a018bb8bb866eeea59dbf7bfb444be6c48f83f302b485e6688ed0fd9ab0760472a57aa13d",
+    "role": "USER",
+    "kyc_status": "VERIFIED",
+    "kyc_pan": "ABCDE1234F",
+    "kyc_aadhaar_last4": "5678",
+    "kyc_address": "123 MG Road, Bengaluru",
+    "is_active": true,
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:51.667258"
+    }
+  },
+  "9fe5299a-0610-4fa8-a805-e79407d6e392": {
+    "user_id": "9fe5299a-0610-4fa8-a805-e79407d6e392",
+    "name": "Priya Patel",
+    "phone": "+919765432109",
+    "email": "priya@demo.in",
+    "password_hash": "scrypt:32768:8:1$igLlxA3Eu8dcBoKe$683d904d4b0e19bdae87353724f2eeec524e6b5b63827e29c41747e9c6a1aee7f5b7efb9b914f3292d322abdae04d72b8f84414fe9444b7b3decc879cd08e824",
+    "role": "USER",
+    "kyc_status": "VERIFIED",
+    "kyc_pan": "ABCDE1234F",
+    "kyc_aadhaar_last4": "5678",
+    "kyc_address": "123 MG Road, Bengaluru",
+    "is_active": true,
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:51.920053"
+    }
+  },
+  "fce83246-1829-4e87-825c-f2f9e9162c17": {
+    "user_id": "fce83246-1829-4e87-825c-f2f9e9162c17",
+    "name": "Amit Kumar",
+    "phone": "+919654321098",
+    "email": "amit@demo.in",
+    "password_hash": "scrypt:32768:8:1$Pujr19qdRNOFccwi$219e1fa2008b12bdb902af670b64017c5788c45a07d17859e05205fa2dc1b3a2961ee9a39027661e9412860a4e5e69ab9e6b6d5b7b64427b603530658299d32d",
+    "role": "USER",
+    "kyc_status": "PENDING",
+    "kyc_pan": "ABCDE1234F",
+    "kyc_aadhaar_last4": "5678",
+    "kyc_address": "123 MG Road, Bengaluru",
+    "is_active": true,
+    "created_at": {
+      "__dt__": "2026-10-24T07:39:52.119377"
+    }
+  },
+  "85c3bf24-0e7e-4c4f-8390-0625de9fbf24": {
+    "user_id": "85c3bf24-0e7e-4c4f-8390-0625de9fbf24",
+    "name": "Raj",
+    "phone": "+918882254003",
+    "email": "sinhadeepanshu695@gmail.com",
+    "password_hash": "scrypt:32768:8:1$BlQK3GQG0rP5qNSv$c6c93f794985886f2c4abd4167b0d1f8a466edbbf923fff5aa902240a87806654f523d248d0acd2cd5339c6b5fdf930a4211fb0a09dfd79f057545301027c1ba",
+    "role": "USER",
+    "kyc_status": "PENDING",
+    "kyc_pan": null,
+    "kyc_aadhaar_last4": null,
+    "kyc_address": null,
+    "is_active": true,
+    "created_at": {
+      "__dt__": "2026-10-24T08:42:29.501993"
+    }
+  }
+}
